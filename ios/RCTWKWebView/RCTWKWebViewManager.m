@@ -52,7 +52,7 @@ RCT_EXPORT_MODULE()
 - (UIView *)view
 {
   WKWebViewConfiguration *config = !!_config ? [_config copy] : [[WKWebViewConfiguration alloc] init];
-  config.processPool = sharedProcessPool;
+  config.processPool = [WKProcessPool sharedProcessPool];
   RCTWKWebView *webView = [[RCTWKWebView alloc] initWithConfig:config];
   webView.delegate = self;
   return webView;
@@ -70,9 +70,11 @@ RCT_REMAP_VIEW_PROPERTY(scrollEnabled, _webView.scrollView.scrollEnabled, BOOL)
 RCT_REMAP_VIEW_PROPERTY(directionalLockEnabled, _webView.scrollView.directionalLockEnabled, BOOL)
 RCT_REMAP_VIEW_PROPERTY(allowsBackForwardNavigationGestures, _webView.allowsBackForwardNavigationGestures, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(injectedJavaScript, NSString)
+RCT_EXPORT_VIEW_PROPERTY(openNewWindowStrategy, NSString)
 RCT_EXPORT_VIEW_PROPERTY(openNewWindowInWebView, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(contentInset, UIEdgeInsets)
 RCT_EXPORT_VIEW_PROPERTY(automaticallyAdjustContentInsets, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(onExternalLinkOpened, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLoadingStart, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLoadingFinish, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLoadingError, RCTDirectEventBlock)
@@ -82,9 +84,13 @@ RCT_EXPORT_VIEW_PROPERTY(onMessage, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onScroll, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(hideKeyboardAccessoryView, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(messagingEnabled, BOOL)
-RCT_EXPORT_VIEW_PROPERTY(allowsLinkPreview, BOOL)
 #if defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000 /* __IPHONE_11_0 */
 RCT_EXPORT_VIEW_PROPERTY(contentInsetAdjustmentBehavior, UIScrollViewContentInsetAdjustmentBehavior)
+#endif
+
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 90000
+RCT_REMAP_VIEW_PROPERTY(allowsLinkPreview, _webView.allowsLinkPreview, BOOL)
 #endif
 
 RCT_EXPORT_METHOD(goBack:(nonnull NSNumber *)reactTag)

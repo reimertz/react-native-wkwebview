@@ -206,6 +206,7 @@ class WKWebView extends React.Component {
     allowsBackForwardNavigationGestures: PropTypes.bool,
     automaticallyAdjustContentInsets: PropTypes.bool,
     contentInset: EdgeInsetsPropType,
+    onExternalLinkOpened: PropTypes.func,
     onNavigationStateChange: PropTypes.func,
     scalesPageToFit: PropTypes.bool,
     startInLoadingState: PropTypes.bool,
@@ -225,6 +226,14 @@ class WKWebView extends React.Component {
      * Set this to true to emulate behavior of WebView component.
      */
     sendCookies: PropTypes.bool,
+    /**
+     * If set to 'webview', target="_blank" or window.open will be opened in WebView, instead
+     * of new window. Default is false to be backward compatible.
+
+     * If set to 'supress', target="_blank" or window.open will be opened in WebView, instead
+     * of new window. Default is false to be backward compatible.
+     */
+    openNewWindowStrategy: PropTypes.string,
     /**
      * If set to true, target="_blank" or window.open will be opened in WebView, instead
      * of new window. Default is false to be backward compatible.
@@ -331,8 +340,10 @@ class WKWebView extends React.Component {
         allowsBackForwardNavigationGestures={this.props.allowsBackForwardNavigationGestures}
         automaticallyAdjustContentInsets={this.props.automaticallyAdjustContentInsets}
         openNewWindowInWebView={this.props.openNewWindowInWebView}
+        openNewWindowStrategy={this.props.openNewWindowStrategy}
         hideKeyboardAccessoryView={this.props.hideKeyboardAccessoryView}
         allowsLinkPreview={this.props.allowsLinkPreview}
+        onExternalLinkOpened={this._onExternalLinkOpened}
         onLoadingStart={this._onLoadingStart}
         onLoadingFinish={this._onLoadingFinish}
         onLoadingError={this._onLoadingError}
@@ -448,6 +459,12 @@ class WKWebView extends React.Component {
    */
   getWebViewHandle = (): any => {
     return ReactNative.findNodeHandle(this.webview);
+  };
+
+  _onExternalLinkOpened = (event: Event) => {
+    const onExternalLinkOpened = this.props.onExternalLinkOpened;
+    
+    onExternalLinkOpened && onExternalLinkOpened(event.nativeEvent.url);
   };
 
   _onLoadingStart = (event: Event) => {

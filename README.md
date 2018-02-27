@@ -49,9 +49,11 @@ A callback to get the loading progress of WKWebView. Derived from [`estimatedPro
 
 `progress` is a double between 0 and 1.
 
-- **openNewWindowInWebView**
+- **openNewWindowStrategy**
 
-If set to true, links with `target="_blank"` or `window.open` will be opened in the current webview, not in Safari. Default is false.
+- If set to `webview`, links with `target="_blank"` or `window.open` will be opened in the current webview, not in Safari. Default is false.
+- If set to `supress`, links with `target="_blank"` or `window.open` will ignored. Could be used together with `onExternalLinkOpened` to open links programatically with packages such as [react-native-safari-view](https://github.com/naoufal/react-native-safari-view).
+
 
 - **sendCookies**
 
@@ -93,6 +95,7 @@ This property specifies how the safe area insets are used to modify the content 
 - onLoadEnd
 - onLoadStart
 - onNavigationStateChange
+- onExternalLinkOpened
 - renderError
 - renderLoading
 - source
