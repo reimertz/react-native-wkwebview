@@ -1,6 +1,7 @@
 #import "RCTWKWebViewManager.h"
 
 #import "RCTWKWebView.h"
+#import "WKProcessPool+SharedProcessPool.h"
 #import <React/RCTBridge.h>
 #import <React/RCTUtils.h>
 #import <React/RCTUIManager.h>
@@ -42,25 +43,16 @@ RCT_ENUM_CONVERTER(UIScrollViewContentInsetAdjustmentBehavior, (@{
 @implementation RCTWKWebViewManager
 {
   NSConditionLock *_shouldStartLoadLock;
-  WKProcessPool *_processPool;
   BOOL _shouldStartLoad;
   WKWebViewConfiguration *_config;
 }
 
 RCT_EXPORT_MODULE()
 
-- (id)init {
-  if (self = [super init]) {
-    _processPool = [[WKProcessPool alloc] init];
-  }
-    
-  return self;
-}
-
 - (UIView *)view
 {
   WKWebViewConfiguration *config = !!_config ? [_config copy] : [[WKWebViewConfiguration alloc] init];
-  config.processPool = _processPool;
+  config.processPool = sharedProcessPool;
   RCTWKWebView *webView = [[RCTWKWebView alloc] initWithConfig:config];
   webView.delegate = self;
   return webView;
